@@ -8,59 +8,19 @@ class BowlingScoreCalculatorTest {
 
     private val game = BowlingGame()
 
-    @Test
-    fun shouldCalculateScoreForWorstGameEver() {
-        rollZeroTimes(20)
-        assertEquals(0, game.score())
+    @Test fun shouldCalculateScoreForWorstGameEver               () = checkGame(                   listOf( 0) * 20,   0)
+    @Test fun shouldCalculateScoreWhenOnePinWasHitDuringWholeGame() = checkGame(listOf(       1) + listOf( 0) * 19,   1)
+    @Test fun shouldCountCorreclyIfSpareIsPresent                () = checkGame(listOf( 5, 5, 2) + listOf( 0) * 17,  14)
+    @Test fun shouldCalculateScoreForStrike                      () = checkGame(listOf(10, 2, 1) + listOf( 0) * 16,  16)
+    @Test fun shouldHavePerfectScoreWhenRollStrike12             () = checkGame(                   listOf(10) * 12, 300)
+
+    fun checkGame(rolls: List<Int>, result: Int) {
+        rolls.forEach { game.roll(it) }
+        assertEquals(result, game.score())
     }
 
-    @Test
-    fun shouldCalculateScoreWhenOnePinWasHitDuringWholeGame() {
-        game.roll(1)
-        rollZeroTimes(19)
-        assertEquals(1, game.score())
-    }
+    operator fun List<Int>.times(n: Int) = (1..n).fold(emptyList<Int>()) { list, n -> list + this }
 
-    @Test
-    fun shouldCountCorreclyIfSpareIsPresent() {
-        rollSpare()
-        game.roll(2)
-        rollZeroTimes(17)
-        assertEquals(14, game.score())
-    }
-
-    @Test
-    fun shouldCalculateScoreForStrike() {
-        rollStrike()
-        game.roll(2)
-        game.roll(1)
-        rollZeroTimes(16)
-        assertEquals(16, game.score())
-    }
-
-    @Test
-    fun shouldHavePerfectScoreWhenRollStrike12() {
-        (0..11).forEach {
-            rollStrike()
-        }
-
-        assertEquals(300, game.score())
-    }
-
-    private fun rollStrike() {
-        game.roll(10)
-    }
-
-    private fun rollSpare() {
-        game.roll(5)
-        game.roll(5)
-    }
-
-    private fun rollZeroTimes(times: Int) {
-        (0 until times).forEach {
-            game.roll(0)
-        }
-    }
 }
 
 class BowlingGame() {
