@@ -40,44 +40,22 @@ class BowlingSpec : Spek({
 
         val game = BowlingGame()
 
-        it("should start with score 0") {
-            assertEquals(0, game.score())
+        var expectedScore = 0
+
+        fun rollAndExpectIncrease(roll: Int, increase: Int) {
+            game.roll(roll)
+            expectedScore += increase
+            assertEquals(expectedScore, game.score())
         }
 
-        it("should return score 3 when rolling 3 pins") {
-            game.roll(3)
-            assertEquals(3, game.score())
-        }
-
-        it("should return score 10 when rolling 7 pins") {
-            game.roll(7)
-            assertEquals(10, game.score())
-        }
-
-        it("should count next roll twice (because of spare in last frame)") {
-            game.roll(5)
-            assertEquals(20, game.score())
-        }
-
-        it("should count second roll in second frame once") {
-            game.roll(1)
-            assertEquals(21, game.score())
-        }
-
-        it("should add 10 when strike in third frame") {
-            game.roll(10)
-            assertEquals(31, game.score())
-        }
-
-        it("should count next roll twice (because of strike in second frame)") {
-            game.roll(9)
-            assertEquals(49, game.score())
-        }
-
-        it("should count second roll in third frame twice (because of strike in second frame)") {
-            game.roll(1)
-            assertEquals(51, game.score())
-        }
+        it("should start with score 0")                        { assertEquals(0, game.score())                   }
+        it("should return score 3 when rolling 3 pins")        { rollAndExpectIncrease(roll =  3, increase =  3) }
+        it("should return score 10 when rolling 7 pins")       { rollAndExpectIncrease(roll =  7, increase =  7) }
+        it("should count first roll twice (we had spare)")     { rollAndExpectIncrease(roll =  5, increase = 10) }
+        it("should count second roll in second frame once")    { rollAndExpectIncrease(roll =  1, increase =  1) }
+        it("should add 10 when strike in third frame")         { rollAndExpectIncrease(roll = 10, increase = 10) }
+        it("should count first roll twice  (we had strike)")   { rollAndExpectIncrease(roll =  4, increase =  8) }
+        it("should count second roll twice (we had strike)")   { rollAndExpectIncrease(roll =  5, increase = 10) }
     }
 })
 
