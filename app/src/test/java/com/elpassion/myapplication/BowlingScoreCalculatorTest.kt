@@ -8,6 +8,12 @@ class BowlingScoreCalculatorTest {
 
     private val game = BowlingGame()
 
+    @Test fun shouldCalculateScoreForOneRollOnly                 () = checkGame(listOf( 7      )                  ,   7)
+    @Test fun shouldCalculateScoreForOneFrameOnly                () = checkGame(listOf( 7, 2   )                  ,   9)
+    @Test fun shouldCalculateScoreForOneSpareFrameOnly           () = checkGame(listOf( 7, 3   )                  ,  10)
+    @Test fun shouldCalculateScoreForOneSpareAndThreeInNextRoll  () = checkGame(listOf( 7, 3, 3)                  ,  16)
+    @Test fun shouldCalculateScoreForSpareAndStrike              () = checkGame(listOf( 7, 3,10)                  ,  30)
+    @Test fun shouldCalculateScoreForSpareAndStrikeAnd2And1      () = checkGame(listOf( 7, 3,10, 2, 1)            ,  36)
     @Test fun shouldCalculateScoreForWorstGameEver               () = checkGame(                   listOf( 0) * 20,   0)
     @Test fun shouldCalculateScoreWhenOnePinWasHitDuringWholeGame() = checkGame(listOf(       1) + listOf( 0) * 19,   1)
     @Test fun shouldCountCorreclyIfSpareIsPresent                () = checkGame(listOf( 5, 5, 2) + listOf( 0) * 17,  14)
@@ -25,7 +31,9 @@ class BowlingScoreCalculatorTest {
 
 class BowlingGame() {
 
-    private val rolls: MutableList<Int> = ArrayList()
+    private val rolls = object : ArrayList<Int>() {
+        override fun get(index: Int) = if(index < size) super.get(index) else 0
+    }
 
     fun roll(pins: Int) {
         rolls.add(pins)
@@ -34,7 +42,7 @@ class BowlingGame() {
     fun score(): Int {
         var score = 0
         var firstInFrame = 0
-        for (i in 0 until 10) {
+        for (i in 1..10) {
             if (isStrike(firstInFrame)) {
                 score += scoreForStrike(firstInFrame)
                 firstInFrame += 1
