@@ -1,7 +1,12 @@
 package com.elpassion.myapplication
 
+import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.given
+import org.jetbrains.spek.api.dsl.it
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.junit.platform.runner.JUnitPlatform
+import org.junit.runner.RunWith
 import java.util.*
 
 class BowlingScoreCalculatorTest {
@@ -28,6 +33,53 @@ class BowlingScoreCalculatorTest {
     operator fun List<Int>.times(n: Int) = (1..n).fold(emptyList<Int>()) { list, n -> list + this }
 
 }
+
+@RunWith(JUnitPlatform::class)
+class BowlingSpec : Spek({
+    given("a bowling game") {
+
+        val game = BowlingGame()
+
+        it("should start with score 0") {
+            assertEquals(0, game.score())
+        }
+
+        it("should return score 3 when rolling 3 pins") {
+            game.roll(3)
+            assertEquals(3, game.score())
+        }
+
+        it("should return score 10 when rolling 7 pins") {
+            game.roll(7)
+            assertEquals(10, game.score())
+        }
+
+        it("should count next roll twice (because of spare in last frame)") {
+            game.roll(5)
+            assertEquals(20, game.score())
+        }
+
+        it("should count second roll in second frame once") {
+            game.roll(1)
+            assertEquals(21, game.score())
+        }
+
+        it("should add 10 when strike in third frame") {
+            game.roll(10)
+            assertEquals(31, game.score())
+        }
+
+        it("should count next roll twice (because of strike in second frame)") {
+            game.roll(9)
+            assertEquals(49, game.score())
+        }
+
+        it("should count second roll in third frame twice (because of strike in second frame)") {
+            game.roll(1)
+            assertEquals(51, game.score())
+        }
+    }
+})
 
 class BowlingGame() {
 
