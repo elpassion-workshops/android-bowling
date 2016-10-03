@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    buildToolsVersion "24.0.2"
     defaultConfig {
         applicationId "com.elpassion.myapplication"
         minSdkVersion 19
@@ -28,9 +28,12 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    testCompile 'org.jetbrains.spek:spek-api:1.0.89'
+    testCompile 'org.jetbrains.spek:spek-junit-platform-engine:1.0.89'
+    testCompile 'org.junit.platform:junit-platform-runner:1.0.0-M2'
 }
 repositories {
     mavenCentral()
