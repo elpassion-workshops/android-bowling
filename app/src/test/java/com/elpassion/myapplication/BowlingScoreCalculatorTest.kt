@@ -56,6 +56,12 @@ class BowlingSpec : Spek({
         it("should add 10 when strike in third frame")         { rollAndExpectIncrease(roll = 10, increase = 10) }
         it("should count first roll twice  (we had strike)")   { rollAndExpectIncrease(roll =  4, increase =  8) }
         it("should count second roll twice (we had strike)")   { rollAndExpectIncrease(roll =  5, increase = 10) }
+
+        for(frame in 5..10) {
+            for(roll in listOf("first", "second")) {
+                it("should increase score by 3 when rolling 3 pins in $frame'th frame in $roll roll") { rollAndExpectIncrease(3, 3) }
+            }
+        }
     }
 })
 
